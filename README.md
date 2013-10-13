@@ -13,4 +13,6 @@ Steps to reproduce:
 
 Surprise, surprise...it will not be the ParentFragment. Try the .apk below to see the results.
 
+The workaround I'm using at the moment is to pass the ParentFragment tag (as String) to ChildFragment then when I need the parent, to look it up using getActivity().getFragmentManager().findFragmentByTag().
+
 [Screenshot](Screenshot.png)

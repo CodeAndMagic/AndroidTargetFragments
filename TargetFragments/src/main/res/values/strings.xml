@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TargetFragments</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="parent_fragment">Parent Fragment</string>
+    <string name="child_fragment">Child Fragment</string>
+    <string name="show_child">Show Child Fragment</string>
+
+</resources>

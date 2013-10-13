@@ -9,6 +9,9 @@ import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,24 +27,39 @@ public class ChildFragment extends Fragment {
     private static final int COLOR_NOK = Color.parseColor("#e82741");
     private static final String SAVED_TARGET_FRAGMENT = "saved_target_fragment";
 
-    public static final String EXPECTED_TARGET = ParentFragment.class.getName();
-
-    private final static SpannableStringBuilder debug = new SpannableStringBuilder();
-    private TextView debugView;
+    private static final String EXPECTED_TARGET_FRAGMENT = ParentFragment.class.getName();
+    private final static SpannableStringBuilder log = new SpannableStringBuilder();
+    private TextView logView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        printTargetFragment("onCreate()");
+        setHasOptionsMenu(true);
+        log("onCreate()");
 
         if(savedInstanceState != null) {
-            printTargetFragment("onCreate() - after rotation");
-            Bundle bundle = savedInstanceState.getBundle(SAVED_TARGET_FRAGMENT);
-            Fragment targetFragment = getFragmentManager().getFragment(bundle, SAVED_TARGET_FRAGMENT);
+            log("onCreate() - after rotation");
 
-            printTargetFragment("onCreate() - restored from bundle",
-                    targetFragment != null ? targetFragment.getClass().getName() : "null");
+            final Bundle bundle = savedInstanceState.getBundle(SAVED_TARGET_FRAGMENT);
+            final Fragment targetFragment = getFragmentManager().getFragment(bundle, SAVED_TARGET_FRAGMENT);
+
+            log("onCreate() - restored from bundle", targetFragment != null ? targetFragment.getClass().getName() : "null");
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.child_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(R.id.action_clear == item.getItemId()) {
+            clearLog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -52,50 +70,59 @@ public class ChildFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        debugView = (TextView) view.findViewById(R.id.child_debug);
-        debugView.setMovementMethod(new ScrollingMovementMethod());
-        printTargetFragment("onViewCreated()");
+        logView = (TextView) view.findViewById(R.id.child_debug);
+        logView.setMovementMethod(new ScrollingMovementMethod());
+        log("onViewCreated()");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        printTargetFragment("onSaveInstanceState()");
-        Bundle bundle = new Bundle();
+        final Bundle bundle = new Bundle();
         getFragmentManager().putFragment(bundle, SAVED_TARGET_FRAGMENT, getTargetFragment());
         outState.putBundle(SAVED_TARGET_FRAGMENT, bundle);
+
+        log("onSaveInstanceState()");
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        printTargetFragment("onActivityCreated()");
+        log("onActivityCreated()");
     }
 
-    private void printTargetFragment(String method) {
+    private void log(String method) {
         final Fragment targetFragment = getTargetFragment();
-        printTargetFragment(method, targetFragment != null ? targetFragment.getClass().getName() : "null");
+        log(method, targetFragment != null ? targetFragment.getClass().getName() : "null");
     }
 
-    private void printTargetFragment(String method, String targetFragment) {
-        printDebug(MessageFormat.format("[{0}] Target Fragment:\n", method), targetFragment);
+    private void log(String method, String targetFragment) {
+        appendLog(MessageFormat.format("[{0}] Target Fragment:\n", method), targetFragment);
     }
 
-    private void printDebug(String message, String targetFragment) {
-        debug.append(message);
-        if (EXPECTED_TARGET.equals(targetFragment)) {
+    private void appendLog(String message, String targetFragment) {
+        log.append(message);
+
+        if (EXPECTED_TARGET_FRAGMENT.equals(targetFragment)) {
             SpannableString span = new SpannableString(targetFragment);
             span.setSpan(new ForegroundColorSpan(COLOR_OK), 0, targetFragment.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            debug.append(span);
+            log.append(span);
         } else {
             SpannableString span = new SpannableString(targetFragment);
             span.setSpan(new ForegroundColorSpan(COLOR_NOK), 0, targetFragment.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            debug.append(span);
+            log.append(span);
         }
-        debug.append("\n\n");
+        log.append("\n\n");
 
-        if(debugView != null) {
-            debugView.setText(debug);
+        if(logView != null) {
+            logView.setText(log);
+        }
+    }
+
+    private void clearLog() {
+        log.clear();
+        if(logView != null) {
+            logView.setText("");
         }
     }
 }

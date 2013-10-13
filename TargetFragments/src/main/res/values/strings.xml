@@ -7,5 +7,6 @@
     <string name="parent_fragment">Parent Fragment</string>
     <string name="child_fragment">Child Fragment</string>
     <string name="show_child">Show Child Fragment</string>
+    <string name="action_clear">Clear Log</string>
 
 </resources>

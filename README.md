@@ -14,13 +14,14 @@ Surprise, surprise...it will not be the ParentFragment. Try the .apk below to se
 
 The workaround I'm using at the moment is to pass the ParentFragment tag (as String) to ChildFragment then when I need the parent, to look it up using getActivity().getFragmentManager().findFragmentByTag().
 
-Interestingly enough, if **getFragmentManager()** is used instead to add the ChildFragment, the behaviour is the correct one.
+Interestingly enough, ***if **getFragmentManager()** is used instead to add the ChildFragment, the behaviour is the correct one***.
 
 Then what's the purpose of getChildFragmentManager() ?
 
 From documentation:
 
-> public final FragmentManager getChildFragmentManager () Added in API level 17
+> public final FragmentManager getChildFragmentManager () [Added in API level 17]
+
 > Return a private FragmentManager for placing and managing Fragments inside of this Fragment.
 
 ![Screenshot](Screenshot.png)

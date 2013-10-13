@@ -36,6 +36,11 @@ public class ParentFragment extends Fragment {
         ChildFragment child = new ChildFragment();
         child.setTargetFragment(this, PARENT);
 
+        // If getFragmentManager() is used instead, the behaviour is the correct one.
+
+        // Then what's the purpose of getChildFragmentManager() ?
+        // From documentation:
+        // getChildFragmentManager() Return a private FragmentManager for placing and managing Fragments inside of this Fragment.
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.child_placeholder, child, "child")

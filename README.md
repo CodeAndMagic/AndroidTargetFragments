@@ -12,3 +12,5 @@ Steps to reproduce:
 + Call getTargetFragment() on the child.
 
 Surprise, surprise...it will not be the ParentFragment. Try the .apk below to see the results.
+
+[Screenshot](Screenshot.png)
